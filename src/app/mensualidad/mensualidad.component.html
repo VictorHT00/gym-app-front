@@ -1,0 +1,145 @@
+<div class="d-flex justify-content-center">
+    <div class="col-md-6">
+        <div class="card text-bg-dark" *ngIf="mensualidad">
+            <div class="card-header">{{titulo}}</div>
+            <div class="card-body">
+                <h4 class="card-title">
+                    <a [routerLink]="['/clientes']" class="btn btn-danger btn-xs">&laquo; Volver</a>
+                </h4>
+
+                <form #mensualidadForm="ngForm">
+                    <div class="mx-auto col-md-7">
+                        <div class="form-group row my-4" *ngIf="mensualidad.cliente">
+                            <label for="cliente" class="col-md-4 form-label col-form-label-lg text-end">Cliente:</label>
+                            <div class="col-sm-8">
+                                <input type="text" name="cliente" class="form-control"
+                                    value="{{mensualidad.cliente.nombre}} {{mensualidad.cliente.apellido}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mx-auto col-md-4">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="seleccionModo"
+                                (change)="actualizarModo()" name="radioOptions" id="r1" value="r-m" checked>
+                            <label class="form-check-label col-form-label-lg" for="r1">Mes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="seleccionModo"
+                                (change)="actualizarModo()" name="radioOptions" id="r2" value="r-d">
+                            <label class="form-check-label col-form-label-lg" for="r2">Día</label>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto col-md-4">
+                        <div class="form-group row" *ngIf="seleccionModo === 'r-m' && mensualidad.cliente">
+                            <div class="col-md-4">
+                                <input type="number" name="meses" class="form-control" [(ngModel)]="mensualidad.meses"
+                                    required #meses="ngModel" (input)="validarCantidad()"
+                                    (change)="calcularFecha(mensualidad.meses, true)" pattern="[0-9]{1,2}">
+                                <div class="alert alert-danger"
+                                    *ngIf="meses.invalid && meses.touched || meses.invalid && mensualidadForm.submitted">
+                                    Cantidad errónea.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row" *ngIf="seleccionModo === 'r-d'">
+                            <div class="col-md-4">
+                                <input type="number" name="dias" class="form-control" [(ngModel)]="mensualidad.dias"
+                                    required #dias="ngModel" (input)="validarCantidad()"
+                                    (change)="calcularFecha(mensualidad.dias, false)" pattern="[0-9]{1,2}">
+                            </div>
+                            <div class="alert alert-danger"
+                                *ngIf="dias.invalid && dias.touched || dias.invalid && mensualidadForm.submitted">
+                                Cantidad errónea.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto col-md-2 mt-3" *ngIf="(mensualidad.cliente.costoPlan.id != 1 && !mensualidad.cliente.siguientePago) || (mensualidad.cliente.estado == 2)">
+                        <div class="form-check col-md-11">
+                            <input class="form-check-input" type="checkbox" value="" [(ngModel)]="cobrarInscripcion"
+                                id="CheckDefault" name="CheckDefault">
+                            <label class="form-check-label" for="CheckDefault">
+                                Cobrar inscripción
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto col-md-7"
+                        *ngIf="((!mensualidad.cliente.siguientePago && mensualidad.cliente.costoPlan.id != 1) || (mensualidad.cliente.estado == 2)) && (cobrarInscripcion && costoPlanes)">
+                        <div class="form-group row">
+                            <label for="inscripcion"
+                                class="col-md-4 form-label col-form-label-lg text-end">Inscripción:</label>
+                            <div class="col-md-3">
+                                <input type="number" name="inscripcion" class="form-control"
+                                    [(ngModel)]="costoPlanes[3].costo" readonly #cobro="ngModel">
+                                <div class="alert alert-danger"
+                                    *ngIf="cobro.invalid && cobro.touched || cobro.invalid && mensualidadForm.submitted">
+                                    La cantidad es requerida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto col-md-7">
+                        <div class="form-group row my-4">
+                            <label for="costo" class="col-md-4 form-label col-form-label-lg text-end">Costo:</label>
+                            <div class="col-md-3">
+                                <input type="number" name="costo" class="form-control" [(ngModel)]="mensualidad.cobro"
+                                    readonly #cobro="ngModel">
+                                <div class="alert alert-danger"
+                                    *ngIf="cobro.invalid && cobro.touched || cobro.invalid && mensualidadForm.submitted">
+                                    La cantidad es requerida.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 class="float-end">Total: <span class="badge bg-primary fs-5"
+                            *ngIf="costoPlanes">{{calcularTotal()}}</span></h2>
+
+                    <div class="mx-auto col-md-7">
+                        <div class="form-group row my-4">
+                            <label for="create_at" class="form-label col-md-4 col-form-label-lg text-end">Siguiente
+                                pago:</label>
+                            <div *ngIf="seleccionModo === 'r-m'" class="col-md-5">
+                                <div *ngIf="!mostrarDate">
+                                    <input type="text" name="siguientePagoText" class="form-control"
+                                        [(ngModel)]="siguientePago" disabled>
+                                </div>
+                                <div *ngIf="mostrarDate">
+                                    <input type="date" name="siguientePagoDate" class="form-control"
+                                        [(ngModel)]="siguientePago">
+                                </div>
+                            </div>
+                            <div *ngIf="seleccionModo === 'r-d'" class="col-md-4">
+                                <div *ngIf="!mostrarDate">
+                                    <input type="text" name="vigenciaText" class="form-control"
+                                        [(ngModel)]="mensualidad.cliente.vigenciaDia" disabled>
+                                </div>
+                                <div *ngIf="mostrarDate">
+                                    <input type="date" name="vigenciaDate" class="form-control"
+                                        [(ngModel)]="mensualidad.cliente.vigenciaDia">
+                                </div>
+                            </div>
+                            <div class="form-check col-md-3">
+                                <input class="form-check-input" type="checkbox" value="" [(ngModel)]="mostrarDate"
+                                    id="flexCheckDefault" name="flexCheckDefault">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Cambiar fecha
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group mt-5 d-grid gap-2 col-5 mx-auto">
+                        <input type="submit" (click)="create(mensualidadForm)" value="Confirmar"
+                            class="btn btn-lg btn-success" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

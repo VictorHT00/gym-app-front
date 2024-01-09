@@ -1,0 +1,93 @@
+<div class="container-xxl">
+    <div class="card text-bg-dark wrap">
+        <div class="card-header text-center mt-3"><h1>Bitácora</h1></div>
+        <div class="card-body">
+
+            <div class="form-group row my-4 col-md-10">
+                <label for="create_at" class="col-form-label col-form-label-lg col-md-4 text-end">Fecha a consultar:</label>
+                <div class="col-md-5">
+                    <input type="date" name="create_at" class="form-control form-control-lg"
+                        [(ngModel)]="fecha" (change)="actualizarOperacion()">
+                </div>
+            </div>
+
+            <div class="mx-auto col-md-8 mb-3">
+                <div class="form-check form-check-inline col-md-3">
+                    <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="seleccionOperacion"
+                        (change)="actualizarOperacion()" name="radioOptions" id="r1" value="check-in" checked>
+                    <label class="form-check-label col-form-label-lg" for="r1">Check-in</label>
+                </div>
+                <div class="form-check form-check-inline col-md-3">
+                    <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="seleccionOperacion"
+                        (change)="actualizarOperacion()" name="radioOptions" id="r2" value="inscripcion">
+                    <label class="form-check-label col-form-label-lg" for="r2">Inscripción</label>
+                </div>
+                <div class="form-check form-check-inline col-md-3">
+                    <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="seleccionOperacion"
+                        (change)="actualizarOperacion()" name="radioOptions" id="r2" value="pago">
+                    <label class="form-check-label col-form-label-lg" for="r2">Pago de suscripción</label>
+                </div>
+            </div>
+
+            <div *ngIf="bitacoras?.length == 0" class="alert alert-info">
+                No hay registros en la base de datos.
+            </div>
+
+            <table class="table table-striped table-dark table-hover table-bordered border-secondary" *ngIf="bitacoras?.length>0 && bitacoras[0].operacion == 3">
+                <thead>
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center align-middle" *ngFor="let bitacora of bitacoras">
+                        <td>{{bitacora.cliente.noCliente}}</td>
+                        <td>{{bitacora.cliente.nombre| uppercase}}</td>
+                        <td>{{bitacora.cliente.apellido | uppercase}}</td>
+                        <td>{{bitacora.fecha | date:"EEEE dd, MMMM yyyy" }}</td>
+                        <td
+                            [ngClass]="{'table-success': bitacora.estado == 1, 'table-danger': bitacora.estado == 2 || bitacora.estado == 5, 'table-warning': bitacora.estado == 3, 'table-info': bitacora.estado == 4}">
+                            {{ (bitacora.estado == 1) ? 'Suscripción activa' :  (bitacora.estado == 2) ? 'Suscripción vencida' : (bitacora.estado == 3) ? 'Día de pago' : (bitacora.estado == 4) ? 'Día pagado':'No se ha realizado ningún pago'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-striped table-dark table-hover table-bordered border-secondary" *ngIf="bitacoras?.length>0 && bitacoras[0].operacion < 3">
+                <thead>
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Fecha</th>
+                        <th>Tipo de suscripción</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center align-middle" *ngFor="let bitacora of bitacoras">
+                        <td>{{bitacora.mensualidad.cliente.noCliente}}</td>
+                        <td>{{bitacora.mensualidad.cliente.nombre| uppercase}}</td>
+                        <td>{{bitacora.mensualidad.cliente.apellido | uppercase}}</td>
+                        <td>{{bitacora.mensualidad.fechaPago| date:"EEEE dd, MMMM yyyy" }}</td>
+                        <td>{{!bitacora.mensualidad.cliente.siguientePago ? 'Diario': bitacora.mensualidad.cliente.mesesSuscripcion == 12 ? 'Anual' : 'Mensual'}}</td>
+                        <td class="text-end">{{bitacora.mensualidad.total}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div *ngIf="bitacoras?.length>0" class="float-end fs-5">
+                <div class="text-end">
+                    {{bitacoras[0].operacion == 1 ? ' Total usuarios nuevos:' : bitacoras[0].operacion == 3 ? 'Total:' : 'Total suscripciones:'}} <span class="badge bg-primary my-3 fs-4">{{totalUsuarios}}</span>
+                </div>
+                <div class="text-end" *ngIf="bitacoras[0].mensualidad">
+                    Total: <span class="badge bg-primary fs-4">{{totalDinero}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<detalle-cliente *ngIf="clienteSeleccionado" [cliente]="clienteSeleccionado"></detalle-cliente>
+<div class="container-xxl">
+    <div class="card text-bg-dark wrap">
+        <div class="card-header text-center mt-3"><h1>Clientes</h1></div>
+        <div class="card-body">
+            <div class="my-2">
+                <button *ngIf="authService.hasRole('ROLE_USER')" class="btn btn-rounded btn-primary" type="button"
+                    [routerLink]="['/clientes/form']">Crear cliente</button>
+            </div>
+
+            <div *ngIf="clientes?.length == 0" class="alert alert-info">
+                No hay registros en la base de datos.
+            </div>
+
+            <table class="table table-striped table-dark table-hover table-bordered border-secondary" *ngIf="clientes?.length>0">
+                <thead>
+                    <tr class="text-center">
+                        <th>ID</th>
+                        <th *ngIf="authService.hasRole('ROLE_USER')">Perfil</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Teléfono</th>
+                        <th>Fecha de inscripción</th>
+                        <th>Meses de suscripción</th>
+                        <th>Siguiente pago</th>
+                        <th>Estado</th>
+                        <th *ngIf="authService.hasRole('ROLE_USER')">Pagar mensualidad</th>
+                        <th *ngIf="authService.hasRole('ROLE_USER')">Editar</th>
+                        <th *ngIf="authService.hasRole('ROLE_USER')">Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center align-middle" *ngFor="let cliente of clientes">
+                        <td>{{cliente.noCliente}}</td>
+                        <td *ngIf="authService.hasRole('ROLE_USER')">
+                            <img *ngIf="cliente?.foto" (click)="abrirModal(cliente)"
+                                src="http://localhost:8085/api/uploads/img/{{cliente.foto}}" alt="{{cliente.foto}}"
+                                class="rounded" style="width: 64px; cursor: pointer;">
+                            <img *ngIf="!cliente?.foto" (click)="abrirModal(cliente)"
+                                src="http://localhost:8085/img/no_foto.jpg" alt="Sin foto" class="rounded"
+                                style="width: 64px; cursor: pointer;">
+                        </td>
+                        <td>{{cliente.nombre | uppercase}}</td>
+                        <td>{{cliente.apellido | uppercase}}</td>
+                        <td>{{cliente.telefono}}</td>
+                        <td>{{cliente.fechaInscripcion | date:"EEEE dd, MMMM yyyy" }}</td>
+                        <td>{{cliente.mesesSuscripcion}}</td>
+                        <td>{{cliente.siguientePago | date:"EEEE dd, MMMM yyyy" }} <span *ngIf="cliente.vigenciaDia != null"><br><br>(Día pagado hasta: <br>{{cliente.vigenciaDia | date:"EEEE dd, MMMM yyyy"}})</span></td>
+                        <td
+                            [ngClass]="{'table-success': cliente.estado == 1, 'table-danger': cliente.estado == 2 || cliente.estado == 5, 'table-warning': cliente.estado == 3, 'table-info': cliente.estado == 4}">
+                            {{ (cliente.estado == 1) ? 'Suscripción activa' :  (cliente.estado == 2) ? 'Suscripción vencida' : (cliente.estado == 3) ? 'Día de pago' : (cliente.estado == 4) ? 'Día pagado':'No se ha realizado ningún pago'}}
+                        </td>
+                        <!--<td
+                            [ngClass]="{'table-success': compararFechas(cliente.mensualidadActual), 'table-danger': !compararFechas(cliente.mensualidadActual)}">
+                            {{ compararFechas(cliente.mensualidadActual) ? 'Sí' : 'No' }}
+                        </td>-->
+                        <td *ngIf="authService.hasRole('ROLE_USER')">
+                            <button type="button" name="mensualidad" [routerLink]="['/mensualidad/form', cliente.id]"
+                                class="btn btn-success btn-sm">Pagar mensualidad</button>
+                        </td>
+                        <td *ngIf="authService.hasRole('ROLE_USER')">
+                            <button type="button" name="editar" [routerLink]="['/clientes/form', cliente.id]"
+                                class="btn btn-primary btn-sm">Editar</button>
+                        </td>
+                        <td *ngIf="authService.hasRole('ROLE_USER')">
+                            <button type="button" name="eliminar" (click)="delete(cliente)"
+                                class="btn btn-danger btn-sm">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <paginator-nav *ngIf="paginador" [paginador]="paginador"></paginator-nav>
+        </div>
+    </div>
+</div>

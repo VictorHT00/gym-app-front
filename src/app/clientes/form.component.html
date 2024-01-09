@@ -1,0 +1,106 @@
+<ul class="alert alert-danger" *ngIf="errores?.length > 0">
+    <li *ngFor="let err of errores">{{err}}</li>
+</ul>
+<div class="d-flex justify-content-center">
+    <div class="col-md-7">
+        <div class="card bg-dark text-white">
+            <div class="card-header text-center mt-3"><h1>{{ titulo }}</h1></div>
+            <div class="card-body">
+                <form #clienteForm="ngForm">
+
+                    <div class="mx-auto col-md-9">
+                        <div class="form-group row my-4">
+                            <label for="id" class="col-form-label col-form-label-lg col-md-4 text-end">No. cliente:</label>
+                            <div class="col-md-3">
+                                <input type="number" name="id" class="form-control form-control-lg"
+                                    [(ngModel)]="cliente.noCliente" #id="ngModel" required> <!--required-->
+                                <div class="alert alert-danger"
+                                    *ngIf="id.invalid && (id.dirty || id.touched)">
+                                    <div *ngIf="id.errors?.['required']">El no. cliente es requerido</div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                    <div class="mx-auto col-md-9">
+                        <div class="form-group row my-4">
+                            <label for="nombre" class="col-form-label col-form-label-lg col-md-4 text-end">Nombre(s):</label>
+                            <div class="col-md-8">
+                                <input type="text" name="nombre" class="form-control form-control-lg" [(ngModel)]="cliente.nombre"
+                                    #nombre="ngModel" required> <!--required minlength="4"-->
+                                <div class="alert alert-danger"
+                                    *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+                                    <div *ngIf="nombre.errors?.['required']">El nombre es requerido</div>
+                                    <div *ngIf="nombre.errors?.['minlength']"> Nombre debe tener al menos 4 caracteres
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mx-auto col-md-9">
+                    <div class="form-group row my-4">
+                        <label for="apellido-paterno" class="col-form-label col-form-label-lg col-md-4 text-end">Apellidos:</label>
+                        <div class="col-md-8">
+                            <input type="text" name="apellido-paterno" class="form-control form-control-lg"
+                                [(ngModel)]="cliente.apellido" #apellidoP="ngModel" required> <!--required-->
+                            <div class="alert alert-danger"
+                                *ngIf="apellidoP.invalid && (apellidoP.dirty || apellidoP.touched)">
+                                <div *ngIf="apellidoP.errors?.['required']">El apellido es requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="mx-auto col-md-9">
+                    <div class="form-group row">
+                        <label for="email" class="col-form-label col-form-label-lg col-md-4 text-end">Teléfono:</label>
+                        <div class="col-md-8">
+                            <input type="tel" name="telefono" pattern="[0-9]{10}" class="form-control form-control-lg"
+                                [(ngModel)]="cliente.telefono" #telefono="ngModel" required> <!--required email-->
+                            <div class="alert alert-danger"
+                                *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+                                <div *ngIf="telefono.errors?.['required']">El telefono es requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="mx-auto col-md-9">
+                    <div class="form-group row my-4">
+                        <label for="create_at" class="col-form-label col-form-label-lg col-md-4 text-end">Fecha inscripción:</label>
+                        <div class="col-md-8">
+                            <input type="date" name="create_at" class="form-control form-control-lg"
+                                [(ngModel)]="cliente.fechaInscripcion">
+                        </div>
+                    </div>
+                    </div>
+
+                   
+
+                    <!--<div class="form-group row my-4">
+                <label for="region" class="col-form-label col-sm-2">Región</label>
+                <div class="col-sm-6">
+                    <select name="region" class="form-select" [compareWith]="compararRegion" [(ngModel)]="cliente.region">
+                        <option [ngValue]="undefined">--- Seleccionar una región ---</option>
+                        <option *ngFor="let region of regiones" [ngValue]="region">{{region.nombre}}</option>
+                    </select>
+                </div>
+            </div> -->
+
+                    <div class="form-group row">
+                        <div class="form-group mt-5 d-grid gap-2 col-5 mx-auto">
+                            <button class="btn btn-lg btn-success" role="button" (click)="create()"
+                                *ngIf="!cliente.id else elseBlock" [disabled]="!clienteForm.form.valid">Crear</button>
+                            <ng-template #elseBlock>
+                                <button class="btn btn-lg btn-success" role="button" (click)="update()"
+                                    [disabled]="!clienteForm.form.valid">Actualizar</button>
+                            </ng-template>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+.background-imagen{
+    background-image: url('../../assets/bg-gym.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 93vh;
+    margin: 0;
+    justify-content: center;
+    align-items: center;
+  }

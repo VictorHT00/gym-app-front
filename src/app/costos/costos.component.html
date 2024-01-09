@@ -1,0 +1,67 @@
+<div class="d-flex justify-content-center">
+    <div class="col-md-6">
+        <div class="card bg-dark text-white">
+            <div class="card-header text-center mt-3">
+                <h1>Precios</h1>
+            </div>
+            <div class="card-body" *ngIf="costoPlanes">
+
+                <div class="mx-auto col-md-8">
+                    <div class="form-group row my-4">
+                        <label for="m2023" class="col-form-label col-form-label-lg col-md-5 text-end">Mensualidad
+                            2023:</label>
+                        <div class="col-md-3">
+                            <input type="text" name="m2023" class="form-control form-control-lg"
+                                [(ngModel)]="costoPlanes[0].costo">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <input type="submit" (click)="update(costoPlanes[0])" value="Actualizar"
+                            class="btn btn-lg btn-primary col-md-3" />
+                    </div>
+                </div>
+
+                <div class="mx-auto col-md-8">
+                    <div class="form-group row my-4">
+                        <label for="m2023" class="col-form-label col-form-label-lg col-md-5 text-end">Mensualidad
+                            2024:</label>
+                        <div class="col-md-3">
+                            <input type="text" name="m2023" class="form-control form-control-lg"
+                                [(ngModel)]="costoPlanes[1].costo">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <input type="submit" (click)="update(costoPlanes[1])" value="Actualizar"
+                            class="btn btn-lg btn-primary col-md-3" />
+                    </div>
+                </div>
+
+                <div class="mx-auto col-md-8">
+                    <div class="form-group row my-4">
+                        <label for="m2023" class="col-form-label col-form-label-lg col-md-5 text-end">Precio por
+                            día:</label>
+                        <div class="col-md-3">
+                            <input type="text" name="m2023" class="form-control form-control-lg"
+                                [(ngModel)]="costoPlanes[2].costo">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <input type="submit" (click)="update(costoPlanes[2])" value="Actualizar"
+                            class="btn btn-lg btn-primary col-md-3" />
+                    </div>
+                </div>
+
+                <div class="mx-auto col-md-8">
+                    <div class="form-group row my-4">
+                        <label for="m2023"
+                            class="col-form-label col-form-label-lg col-md-5 text-end">Inscripción:</label>
+                        <div class="col-md-3">
+                            <input type="text" name="m2023" class="form-control form-control-lg"
+                                [(ngModel)]="costoPlanes[3].costo">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <input type="submit" (click)="update(costoPlanes[3])" value="Actualizar"
+                            class="btn btn-lg btn-primary col-md-3" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
