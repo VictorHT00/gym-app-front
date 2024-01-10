@@ -1,24 +1,76 @@
 <detalle-cliente *ngIf="clienteSeleccionado" [cliente]="clienteSeleccionado"></detalle-cliente>
-<div class="container-xxl">
+<div class="m-0 p-5">
     <div class="card text-bg-dark wrap">
-        <div class="card-header text-center mt-3"><h1>Clientes</h1></div>
+        <div class="card-header text-center mt-3">
+            <h1>Clientes</h1>
+        </div>
         <div class="card-body">
             <div class="my-2">
-                <button *ngIf="authService.hasRole('ROLE_USER')" class="btn btn-rounded btn-primary" type="button"
-                    [routerLink]="['/clientes/form']">Crear cliente</button>
+                <button *ngIf="authService.hasRole('ROLE_USER')" class="btn btn-rounded btn-lg btn-primary"
+                    type="button" [routerLink]="['/clientes/form']">Crear cliente</button>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="row justify-content-center col-md-8">
+                    <div class="col-md-2">
+                        <label class="form-check-label col-form-label-lg" for="bid">Buscar por:</label>
+                    </div>
+                    <div class="col-md-1 form-check form-check-inline">
+                        <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
+                            (change)="variable = ''; getClientesPaginador()" name="radioOptions" id="bid" value="bid">
+                        <label class="form-check-label col-form-label-lg" for="bid">ID</label>
+                    </div>
+                    <div class="col-md-2 form-check form-check-inline">
+                        <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
+                            (change)="variable = ''; getClientesPaginador()" name="radioOptions" id="bnombre" value="bnombre" checked>
+                        <label class="form-check-label col-form-label-lg" for="bnombre">Nombre</label>
+                    </div>
+                    <div class="col-md-2 form-check form-check-inline">
+                        <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
+                            (change)="variable = ''; getClientesPaginador()" name="radioOptions" id="bapellido" value="bapellido">
+                        <label class="form-check-label col-form-label-lg" for="bapellido">Apellido</label>
+                    </div>
+                    <div class="col-md-2 form-check form-check-inline">
+                        <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
+                            (change)="variable = ''; getClientesPaginador()" name="radioOptions" id="btelefono" value="btelefono">
+                        <label class="form-check-label col-form-label-lg" for="btelefono">Teléfono</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <div class="input-group mb-3">
+                            <input *ngIf="tipoBusqueda == 'bid'" type="number" [(ngModel)]="variable"
+                                (input)="getClientesByFiltro()" placeholder="Ingresa el ID"
+                                class="form-control form-control-lg text-center">
+                            <input *ngIf="tipoBusqueda == 'bnombre'" type="text" [(ngModel)]="variable"
+                                (input)="getClientesByFiltro()" placeholder="Ingresa el nombre"
+                                class="form-control form-control-lg text-center">
+                            <input *ngIf="tipoBusqueda == 'bapellido'" type="text" [(ngModel)]="variable"
+                                (input)="getClientesByFiltro()" placeholder="Ingresa el apellido"
+                                class="form-control form-control-lg text-center">
+                            <input *ngIf="tipoBusqueda == 'btelefono'" type="text" [(ngModel)]="variable"
+                                (input)="getClientesByFiltro()" placeholder="Ingresa los últimos dígitos"
+                                class="form-control form-control-lg text-center">
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div *ngIf="clientes?.length == 0" class="alert alert-info">
                 No hay registros en la base de datos.
             </div>
 
-            <table class="table table-striped table-dark table-hover table-bordered border-secondary" *ngIf="clientes?.length>0">
+            <table class="table table-striped table-dark table-hover table-bordered border-secondary"
+                *ngIf="clientes?.length>0">
                 <thead>
                     <tr class="text-center">
                         <th>ID</th>
                         <th *ngIf="authService.hasRole('ROLE_USER')">Perfil</th>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
+                        <th>Nombre(s)</th>
+                        <th>Apellidos</th>
                         <th>Teléfono</th>
                         <th>Fecha de inscripción</th>
                         <th>Meses de suscripción</th>
@@ -45,10 +97,14 @@
                         <td>{{cliente.telefono}}</td>
                         <td>{{cliente.fechaInscripcion | date:"EEEE dd, MMMM yyyy" }}</td>
                         <td>{{cliente.mesesSuscripcion}}</td>
-                        <td>{{cliente.siguientePago | date:"EEEE dd, MMMM yyyy" }} <span *ngIf="cliente.vigenciaDia != null"><br><br>(Día pagado hasta: <br>{{cliente.vigenciaDia | date:"EEEE dd, MMMM yyyy"}})</span></td>
+                        <td>{{cliente.siguientePago | date:"EEEE dd, MMMM yyyy" }} <span
+                                *ngIf="cliente.vigenciaDia != null"><br><br>(Día pagado hasta:
+                                <br>{{cliente.vigenciaDia | date:"EEEE dd, MMMM yyyy"}})</span></td>
                         <td
                             [ngClass]="{'table-success': cliente.estado == 1, 'table-danger': cliente.estado == 2 || cliente.estado == 5, 'table-warning': cliente.estado == 3, 'table-info': cliente.estado == 4}">
-                            {{ (cliente.estado == 1) ? 'Suscripción activa' :  (cliente.estado == 2) ? 'Suscripción vencida' : (cliente.estado == 3) ? 'Día de pago' : (cliente.estado == 4) ? 'Día pagado':'No se ha realizado ningún pago'}}
+                            {{ (cliente.estado == 1) ? 'Suscripción activa' : (cliente.estado == 2) ? 'Suscripción
+                            vencida' : (cliente.estado == 3) ? 'Día de pago' : (cliente.estado == 4) ? 'Día
+                            pagado':'No se ha realizado ningún pago'}}
                         </td>
                         <!--<td
                             [ngClass]="{'table-success': compararFechas(cliente.mensualidadActual), 'table-danger': !compararFechas(cliente.mensualidadActual)}">

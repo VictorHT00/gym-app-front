@@ -4,30 +4,34 @@
 <div class="d-flex justify-content-center">
     <div class="col-md-7">
         <div class="card bg-dark text-white">
-            <div class="card-header text-center mt-3"><h1>{{ titulo }}</h1></div>
+            <div class="card-header text-center mt-3">
+                <h1>{{ titulo }}</h1>
+            </div>
             <div class="card-body">
                 <form #clienteForm="ngForm">
 
                     <div class="mx-auto col-md-9">
                         <div class="form-group row my-4">
-                            <label for="id" class="col-form-label col-form-label-lg col-md-4 text-end">No. cliente:</label>
+                            <label for="id" class="col-form-label col-form-label-lg col-md-4 text-end">No.
+                                cliente:</label>
                             <div class="col-md-3">
                                 <input type="number" name="id" class="form-control form-control-lg"
                                     [(ngModel)]="cliente.noCliente" #id="ngModel" required> <!--required-->
-                                <div class="alert alert-danger"
-                                    *ngIf="id.invalid && (id.dirty || id.touched)">
+                                <div class="alert alert-danger" *ngIf="id.invalid && (id.dirty || id.touched)">
                                     <div *ngIf="id.errors?.['required']">El no. cliente es requerido</div>
                                 </div>
                             </div>
                         </div>
-                        </div>
+                    </div>
 
                     <div class="mx-auto col-md-9">
                         <div class="form-group row my-4">
-                            <label for="nombre" class="col-form-label col-form-label-lg col-md-4 text-end">Nombre(s):</label>
+                            <label for="nombre"
+                                class="col-form-label col-form-label-lg col-md-4 text-end">Nombre(s):</label>
                             <div class="col-md-8">
-                                <input type="text" name="nombre" class="form-control form-control-lg" [(ngModel)]="cliente.nombre"
-                                    #nombre="ngModel" required> <!--required minlength="4"-->
+                                <input type="text" name="nombre" class="form-control form-control-lg"
+                                    [(ngModel)]="cliente.nombre" #nombre="ngModel" required>
+                                <!--required minlength="4"-->
                                 <div class="alert alert-danger"
                                     *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
                                     <div *ngIf="nombre.errors?.['required']">El nombre es requerido</div>
@@ -39,44 +43,64 @@
                     </div>
 
                     <div class="mx-auto col-md-9">
-                    <div class="form-group row my-4">
-                        <label for="apellido-paterno" class="col-form-label col-form-label-lg col-md-4 text-end">Apellidos:</label>
-                        <div class="col-md-8">
-                            <input type="text" name="apellido-paterno" class="form-control form-control-lg"
-                                [(ngModel)]="cliente.apellido" #apellidoP="ngModel" required> <!--required-->
-                            <div class="alert alert-danger"
-                                *ngIf="apellidoP.invalid && (apellidoP.dirty || apellidoP.touched)">
-                                <div *ngIf="apellidoP.errors?.['required']">El apellido es requerido</div>
+                        <div class="form-group row my-4">
+                            <label for="apellido-paterno"
+                                class="col-form-label col-form-label-lg col-md-4 text-end">Apellidos:</label>
+                            <div class="col-md-8">
+                                <input type="text" name="apellido-paterno" class="form-control form-control-lg"
+                                    [(ngModel)]="cliente.apellido" #apellidoP="ngModel" required> <!--required-->
+                                <div class="alert alert-danger"
+                                    *ngIf="apellidoP.invalid && (apellidoP.dirty || apellidoP.touched)">
+                                    <div *ngIf="apellidoP.errors?.['required']">El apellido es requerido</div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
 
                     <div class="mx-auto col-md-9">
-                    <div class="form-group row">
-                        <label for="email" class="col-form-label col-form-label-lg col-md-4 text-end">Teléfono:</label>
-                        <div class="col-md-8">
-                            <input type="tel" name="telefono" pattern="[0-9]{10}" class="form-control form-control-lg"
-                                [(ngModel)]="cliente.telefono" #telefono="ngModel" required> <!--required email-->
-                            <div class="alert alert-danger"
-                                *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
-                                <div *ngIf="telefono.errors?.['required']">El telefono es requerido</div>
+                        <div class="form-group row my-4">
+                            <label for="telefono"
+                                class="col-form-label col-form-label-lg col-md-4 text-end">Teléfono:</label>
+                            <div class="col-md-8">
+                                <input type="tel" name="telefono" pattern="[0-9]{10}"
+                                    class="form-control form-control-lg" [(ngModel)]="cliente.telefono"
+                                    #telefono="ngModel" required>
+                                <div class="alert alert-danger"
+                                    *ngIf="telefono.invalid && (telefono.dirty || telefono.touched)">
+                                    <div *ngIf="telefono.errors?.['required']">El telefono es requerido</div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div class="mx-auto col-md-9">
+                        <div class="form-group row">
+                            <label for="telefonoE"
+                                class="col-form-label col-form-label-lg col-md-4 text-end">Teléfono de emergencia:</label>
+                            <div class="col-md-8">
+                                <input type="tel" name="telefonoE" pattern="[0-9]{10}"
+                                    class="form-control form-control-lg" [(ngModel)]="cliente.telefonoEmergencia"
+                                    #telefonoE="ngModel">
+                                <div class="alert alert-danger"
+                                    *ngIf="telefonoE.invalid && (telefonoE.dirty || telefonoE.touched)">
+                                    <div *ngIf="telefonoE.errors?.['required']">El telefono es requerido</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mx-auto col-md-9">
-                    <div class="form-group row my-4">
-                        <label for="create_at" class="col-form-label col-form-label-lg col-md-4 text-end">Fecha inscripción:</label>
-                        <div class="col-md-8">
-                            <input type="date" name="create_at" class="form-control form-control-lg"
-                                [(ngModel)]="cliente.fechaInscripcion">
+                        <div class="form-group row my-4">
+                            <label for="create_at" class="col-form-label col-form-label-lg col-md-4 text-end">Fecha
+                                inscripción:</label>
+                            <div class="col-md-8">
+                                <input type="date" name="create_at" class="form-control form-control-lg"
+                                    [(ngModel)]="cliente.fechaInscripcion">
+                            </div>
                         </div>
                     </div>
-                    </div>
 
-                   
+
 
                     <!--<div class="form-group row my-4">
                 <label for="region" class="col-form-label col-sm-2">Región</label>

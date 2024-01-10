@@ -14,7 +14,8 @@
 
                                 <ul *ngIf="cliente" class="list-group  mb-5">
                                     <li class="list-group-item active">{{cliente.nombre}} {{cliente.apellido}}</li>
-                                    <li class="list-group-item text-bg-dark">{{cliente.telefono}}</li>
+                                    <li class="list-group-item text-bg-dark">Teléfono: {{cliente.telefono}}</li>
+                                    <li class="list-group-item text-bg-dark">Teléfono de emergencia: {{cliente.telefonoEmergencia}}</li>
                                     <li class="list-group-item text-bg-dark">Fecha de inscripción: {{cliente.fechaInscripcion | date:"fullDate"}}</li>
                                     <li class="list-group-item text-bg-dark" >Fecha de siguiente pago: {{cliente.siguientePago | date:"fullDate"}}</li>
                                     <li class="list-group-item" [ngClass]="{'text-bg-success': cliente.estado == 1, 'text-bg-danger': cliente.estado == 2 || cliente.estado == 5, 'text-bg-warning': cliente.estado == 3, 'text-bg-info': cliente.estado == 4}">Estado: {{(cliente.estado == 1) ? 'Suscripción activa' :  (cliente.estado == 2) ? 'Suscripción vencida' : (cliente.estado == 3) ? 'Día de pago' : (cliente.estado == 4) ? 'Día pagado':'No se ha realizado ningún pago'}}</li>

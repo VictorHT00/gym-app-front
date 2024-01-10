@@ -1,12 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Cliente } from './cliente';
-import { Observable, catchError, map, tap, throwError } from 'rxjs';
-import { HttpClient, HttpEvent, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { HttpClient, HttpEvent, HttpParams, HttpRequest } from '@angular/common/http';
 import { Router } from '@angular/router';
-import Swal from 'sweetalert2';
-import { DatePipe, formatDate } from '@angular/common';
-import { Region } from './region';
-import { AuthService } from '../usuarios/auth.service';
 import { CostoPlan } from '../costos/costoPlan';
 
 
@@ -18,21 +14,15 @@ export class ClienteService {
 
   private urlEndPoint: string = 'http://localhost:8085/api/clientes';
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   getClientes(page: number): Observable<any> {
     return this.http.get(this.urlEndPoint + '/page/' + page).pipe(
-      tap((response: any) => {
-        console.log('ClienteService: tap 1');
-      }),
       map((response: any) => {
         (response.content as Cliente[]).map(cliente => {
           return cliente;
         });
         return response;
-      }),
-      tap(response => {
-        console.log('ClienteService: tap 2');
       })
     )
 
@@ -95,6 +85,42 @@ export class ClienteService {
         return throwError(e);
       })
     )
+  }
+
+  getClientesById(id: string):Observable<Cliente[]>{
+    let params = new HttpParams();
+    if (id) {
+      params = params.set('id', id);
+    }
+
+    return this.http.get<Cliente[]>(`${this.urlEndPoint}/buscar-id`, { params });
+  }
+
+  getClientesByNombre(nombre: string):Observable<Cliente[]>{
+    let params = new HttpParams();
+    if (nombre) {
+      params = params.set('nombre', nombre);
+    }
+
+    return this.http.get<Cliente[]>(`${this.urlEndPoint}/buscar-nombre`, { params });
+  }
+
+  getClientesByApellido(apellido: string):Observable<Cliente[]>{
+    let params = new HttpParams();
+    if (apellido) {
+      params = params.set('apellido', apellido);
+    }
+
+    return this.http.get<Cliente[]>(`${this.urlEndPoint}/buscar-apellido`, { params });
+  }
+
+  getClientesByTelefono(telefono: string):Observable<Cliente[]>{
+    let params = new HttpParams();
+    if (telefono) {
+      params = params.set('telefono', telefono);
+    }
+
+    return this.http.get<Cliente[]>(`${this.urlEndPoint}/buscar-telefono`, { params });
   }
 
   update(cliente: Cliente): Observable<any> {

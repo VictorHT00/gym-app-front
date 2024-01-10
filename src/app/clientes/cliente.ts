@@ -9,6 +9,7 @@ export class Cliente {
     nombre: string;
     apellido: string;
     telefono: string;
+    telefonoEmergencia: string;
     fechaInscripcion: string;
     mesesSuscripcion: number;
     siguientePago: string;

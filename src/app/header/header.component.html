@@ -18,6 +18,9 @@
         <li class="nav-item">
           <a class="nav-link fs-5" *ngIf="authService.hasRole('ROLE_ADMIN')" routerLink="/bitacora">Bitácoras</a>
         </li>
+        <li class="nav-item" style="margin-left: 80px;">
+          <button (click)="exportarBaseDatos()" class="btn btn-primary" type="submit">Exportar datos</button>
+        </li>
       </ul>
       <ul class="navbar-nav navbar-right">
         <li *ngIf="!authService.isAuthenticated()"><a routerLink="/login" class="btn btn-outline-light">Ingresar</a></li>

@@ -2,11 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from './cliente.service';
 import Swal from 'sweetalert2';
-import { tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { ModalService } from './detalle/modal.service';
 import { AuthService } from '../usuarios/auth.service';
-import { addMonths, differenceInMonths, isBefore, isSameDay, parse, subDays } from 'date-fns';
+import { isBefore, isSameDay } from 'date-fns';
 
 @Component({
   selector: 'app-clientes',
@@ -17,6 +16,9 @@ export class ClientesComponent implements OnInit {
   paginador: any;
   clienteSeleccionado: Cliente;
 
+  tipoBusqueda: string = "bnombre";
+  variable: string;
+
   constructor(
     private clienteService: ClienteService,
     public modalService: ModalService,
@@ -25,32 +27,7 @@ export class ClientesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.activatedRoute.params.subscribe(params => {
-      let page: number = params['page'];
-      if (!page) {
-        page = 0;
-      }
-
-      this.clienteService.getClientes(page).pipe(
-        tap(response => {
-          console.log('ClienteComponent: tap 3');
-          /*(response.content as Cliente[]).forEach(cliente => {
-            console.log(cliente.nombre);
-          });*/
-        })
-      ).subscribe(response => {
-        this.clientes = response.content as Cliente[];
-        console.log(this.clientes);
-        this.clientes.forEach(cliente => {
-          cliente.estado = this.getEstado(cliente);
-          if ((cliente.estado == 2 || cliente.estado == 4) && cliente.mesesSuscripcion > 0) {
-            cliente.mesesSuscripcion = 0;
-          }
-        })
-        this.clientes.sort((a,b) => a.noCliente - b.noCliente);
-        this.paginador = response;
-      });
-    });
+    this.getClientesPaginador();
 
     this.modalService.notificarUpload.subscribe(cliente => {
       this.clientes = this.clientes.map(clienteOriginal => {
@@ -60,6 +37,55 @@ export class ClientesComponent implements OnInit {
         return clienteOriginal;
       })
     })
+  }
+
+  getClientesPaginador() {
+    this.activatedRoute.params.subscribe(params => {
+      let page: number = params['page'];
+      if (!page) {
+        page = 0;
+      }
+
+      this.clienteService.getClientes(page).subscribe(response => {
+        this.clientes = response.content as Cliente[];
+        this.setEstado();
+        this.clientes.sort((a, b) => a.noCliente - b.noCliente);
+        this.paginador = response;
+      });
+    });
+  }
+
+
+  getClientesByFiltro() {
+    if (this.variable == null || this.variable == "") {
+      this.getClientesPaginador();
+    } else {
+      if(this.tipoBusqueda == "bid"){
+        this.clienteService.getClientesById(this.variable).subscribe(response => {
+          this.clientes = response;
+          this.setEstado();
+          this.paginador = null;
+        })
+      } else if (this.tipoBusqueda == "bnombre") {
+        this.clienteService.getClientesByNombre(this.variable).subscribe(response => {
+          this.clientes = response;
+          this.setEstado();
+          this.paginador = null;
+        })
+      } else if(this.tipoBusqueda == 'bapellido') {
+        this.clienteService.getClientesByApellido(this.variable).subscribe(response => {
+          this.clientes = response;
+          this.setEstado();
+          this.paginador = null;
+        })
+      } else if(this.tipoBusqueda == 'btelefono') {
+        this.clienteService.getClientesByTelefono(this.variable).subscribe(response => {
+          this.clientes = response;
+          this.setEstado();
+          this.paginador = null;
+        })
+      }
+    }
   }
 
   delete(cliente: Cliente): void {
@@ -99,6 +125,15 @@ export class ClientesComponent implements OnInit {
     this.modalService.abrirModal();
   }
 
+  setEstado(){
+    this.clientes.forEach(cliente => {
+      cliente.estado = this.getEstado(cliente);
+      if ((cliente.estado == 2 || cliente.estado == 4) && cliente.mesesSuscripcion > 0) {
+        cliente.mesesSuscripcion = 0;
+      }
+    })
+  }
+
   getEstado(cliente: Cliente): number {
     const fechaActual = new Date();
     if (cliente.vigenciaDia != null) {
@@ -130,9 +165,13 @@ export class ClientesComponent implements OnInit {
       if (cliente.costoPlan.id == 1) {
         cliente.costoPlan.id = 2;
       }
-      this.clienteService.update(cliente).subscribe(json => console.log(json.cliente));
+      this.clienteService.update(cliente);
 
       return 2;
     }
+  }
+
+  actualizarTipoBusqueda(): void {
+
   }
 }
