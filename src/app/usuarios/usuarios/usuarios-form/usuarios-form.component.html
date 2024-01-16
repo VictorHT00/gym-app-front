@@ -63,10 +63,10 @@
                     <div class="mx-auto col-md-9">
                         <div class="form-group row my-4" *ngIf="!usuario.id || cambiarPass">
                             <label for="password" class="col-form-label col-form-label-lg col-md-4 text-end">Contraseña:</label>
-                            <div class="col-sm-2">
+                            <div class="col-sm-3">
                                 <input type="password" name="password" class="form-control  form-control-lg" [(ngModel)]="usuario.password">
                             </div>
-                            <button class="btn btn-primary col-sm-3" role="button" (click)="updatePassword()">Actualizar Contraseña</button>
+                            <button *ngIf="cambiarPass" class="btn btn-primary col-sm-3" role="button" (click)="updatePassword()">Actualizar Contraseña</button>
                         </div>
                     </div>
 

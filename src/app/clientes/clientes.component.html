@@ -15,10 +15,10 @@
                     <div class="col-md-2">
                         <label class="form-check-label col-form-label-lg" for="bid">Buscar por:</label>
                     </div>
-                    <div class="col-md-1 form-check form-check-inline">
+                    <div class="col-md-2 form-check form-check-inline">
                         <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
                             (change)="variable = ''; getClientesPaginador()" name="radioOptions" id="bid" value="bid">
-                        <label class="form-check-label col-form-label-lg" for="bid">ID</label>
+                        <label class="form-check-label col-form-label-lg" for="bid">No. cliente</label>
                     </div>
                     <div class="col-md-2 form-check form-check-inline">
                         <input class="form-check-input col-form-label-lg" type="radio" [(ngModel)]="tipoBusqueda"
@@ -67,7 +67,7 @@
                 *ngIf="clientes?.length>0">
                 <thead>
                     <tr class="text-center">
-                        <th>ID</th>
+                        <th>No. cliente</th>
                         <th *ngIf="authService.hasRole('ROLE_USER')">Perfil</th>
                         <th>Nombre(s)</th>
                         <th>Apellidos</th>
