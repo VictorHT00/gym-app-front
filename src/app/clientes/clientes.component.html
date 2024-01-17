@@ -5,9 +5,20 @@
             <h1>Clientes</h1>
         </div>
         <div class="card-body">
-            <div class="my-2">
-                <button *ngIf="authService.hasRole('ROLE_USER')" class="btn btn-rounded btn-lg btn-primary"
-                    type="button" [routerLink]="['/clientes/form']">Crear cliente</button>
+            <div class="row my-2"> 
+                <div class="col-md-7">
+                    <button *ngIf="authService.hasRole('ROLE_USER')" class="btn btn-rounded btn-lg btn-primary"
+                        type="button" [routerLink]="['/clientes/form']">Crear cliente</button>
+                </div>
+                <div class="col-md-2">
+                    Clientes activos: <span class="badge bg-success fs-5">{{susActiva}}</span>
+                </div>
+                <div class="col-md-2">
+                    Clientes inactivos: <span class="badge bg-danger fs-5">{{susVencida}}</span>
+                </div>
+                <div class="col-md-1">
+                    Total: <span class="badge bg-primary fs-5">{{susActiva + susVencida}}</span>
+                </div>
             </div>
 
             <div class="row justify-content-center">

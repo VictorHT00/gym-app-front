@@ -28,6 +28,10 @@ export class ClienteService {
 
   };
 
+  getClientesAll(): Observable<Cliente[]>{
+    return this.http.get<Cliente[]>(this.urlEndPoint);
+  }
+
   create(cliente: Cliente): Observable<any> {
     return this.http.post<any>(this.urlEndPoint, cliente).pipe(
       catchError(e => {

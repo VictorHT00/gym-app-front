@@ -19,6 +19,10 @@ export class ClientesComponent implements OnInit {
   tipoBusqueda: string = "bnombre";
   variable: string;
 
+  susActiva: number = 0;
+  susVencida: number = 0;
+
+
   constructor(
     private clienteService: ClienteService,
     public modalService: ModalService,
@@ -26,6 +30,19 @@ export class ClientesComponent implements OnInit {
     private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+
+
+    this.clienteService.getClientesAll().subscribe(clientes => {
+      console.log(clientes);
+      clientes.forEach(cliente =>{
+        if(this.getEstado(cliente) == 1 || this.getEstado(cliente) == 3){
+          this.susActiva++;
+        }else{
+          this.susVencida++;
+        }
+      })
+      console.log(this.susActiva+"---"+this.susVencida);
+    });
 
     this.getClientesPaginador();
 
